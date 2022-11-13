@@ -5,9 +5,10 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 /// @custom:security-contact leofishman@gmail.com
-contract Plyxer is Initializable, ERC20Upgradeable, PausableUpgradeable, OwnableUpgradeable {
+contract Plyxer is Initializable, ERC20Upgradeable, PausableUpgradeable, OwnableUpgradeable, UUPSUpgradeable {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
         _disableInitializers();
@@ -17,6 +18,7 @@ contract Plyxer is Initializable, ERC20Upgradeable, PausableUpgradeable, Ownable
         __ERC20_init("Plyxer", "PLXY");
         __Pausable_init();
         __Ownable_init();
+        __UUPSUpgradeable_init();
 
         _mint(msg.sender, 10000000000 * 10 ** decimals());
     }
@@ -36,4 +38,10 @@ contract Plyxer is Initializable, ERC20Upgradeable, PausableUpgradeable, Ownable
     {
         super._beforeTokenTransfer(from, to, amount);
     }
+
+    function _authorizeUpgrade(address newImplementation)
+        internal
+        onlyOwner
+        override
+    {}
 }
